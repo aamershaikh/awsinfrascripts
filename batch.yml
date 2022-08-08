@@ -1,0 +1,111 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: CloudFormation template for s3 bucket 
+
+Parameters:
+  LambdaFunctionName:
+    Type: String
+    MinLength: '1'
+    MaxLength: '64'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9_-]*'
+    Description: The name of the Lambda function to be deployed
+    Default: Glue-Job-Trigger
+  LambdaRoleName:
+    Type: String
+    MinLength: '1'
+    MaxLength: '64'
+    AllowedPattern: '[\w+=,.@-]+'
+    Description: The name of the IAM role used as the Lambda execution role
+    Default: Affinity_forum_POC
+    
+Resources:
+  S3Bucket-Target:
+    Type: AWS::S3::Bucket
+    Description: Creating Amazon S3 bucket from CloudFormation
+    Properties:
+      BucketName: target-batch-files
+  S3Bucket-Input:
+    Type: AWS::S3::Bucket
+    Description: Creating Amazon S3 bucket from CloudFormation
+    Properties:
+      BucketName: input-batch-files
+      NotificationConfiguration:
+        EventBridgeConfiguration:
+          EventBridgeEnabled: true
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref LambdaRoleName
+      Description: An execution role for a Lambda function launched by CloudFormation
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Adds a basic lambda function
+      FunctionName: !Ref LambdaFunctionName
+      Handler: index.lambda_handler
+      MemorySize: 128
+      Runtime: python3.8
+      Role: !GetAtt 'LambdaRole.Arn'
+      Timeout: 240
+
+      Code:
+        ZipFile: |
+            # Imports
+            import os
+            import boto3
+            import botocore
+            import logging
+            import random
+            import string
+            # Set up clients and resources
+            # ddbclient = boto3.client('dynamodb')
+            # Set up the logger
+            logger = logging.getLogger()
+            logger.setLevel(logging.INFO)
+            #logger.setLevel(logging.DEBUG) # Very verbose
+            # Env variables from CFN
+            
+            def lambda_handler(event, context):
+                # Generate a random string to ensure no duplicates are put into DDB table
+                logger.info('Lambda Successfully invoked')
+                
+
+  EventRule: 
+        Type: AWS::Events::Rule
+        Properties: 
+          Description: "EventRule"
+          EventPattern: 
+            source:
+            - aws.s3
+            detail-type:
+            - Object Created
+            detail:
+              bucket:
+                name:
+                - input-batch-files
+          State: "ENABLED"
+          Targets: 
+            - 
+              Arn: 
+                Fn::GetAtt: 
+                  - "LambdaFunctionName"
+                  - "Arn"
+              Id: "invoiceServiceTarget"
+
+  PermissionForEventsToInvokeLambda: 
+    Type: AWS::Lambda::Permission
+    Properties: 
+      FunctionName: 
+        Ref: "LambdaFunctionName"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: 
+        Fn::GetAtt: 
+          - "EventRule"
+          - "Arn"                
+Outputs:
+  S3Bucket:
+    Description: Bucket Created using this template.
+    Value: !Ref S3Bucket
+  S3Bucket-Input:
+    Description: Bucket Created using this template.
+    Value: !Ref S3Bucket-Input
