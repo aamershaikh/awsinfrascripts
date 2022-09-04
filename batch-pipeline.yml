@@ -252,3 +252,4 @@ Resources:
           Resource:  !GetAtt FileQueue.Arn
       Queues:
         - Ref: FileQueue
+    
