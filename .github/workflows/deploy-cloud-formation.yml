@@ -35,3 +35,4 @@ jobs:
           name: as-98-aws-aff-stack
           template: batch-pipeline.yml
           no-fail-on-empty-changeset: "1"
+          capabilities: CAPABILITY_IAM
