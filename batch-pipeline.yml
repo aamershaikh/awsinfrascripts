@@ -4,24 +4,24 @@ Description: CloudFormation template for s3 bucket
 Parameters:
   InputBucketName:
     Type: String
-    Default: inp-batch-files
+    Default: as98-inp-batch-files
   OutputBucketName:
     Type: String
-    Default: tar-batch-files
+    Default: as98-tar-batch-files
   LoggingBucketName:
     Type: String
-    Default: log-batch-files
+    Default: as98-log-batch-files
   LambdaFunctionName:
     Type: String
     Description: The name of the Lambda function to be deployed
-    Default: Glue-Job-Trigger
+    Default: as98-glue-job-Trigger
   LambdaRoleName:
     Type: String
     Description: The name of the IAM role used as the Lambda execution role
-    Default: Affinity_forum_POC
+    Default: as98-affinity_forum
   LambdaPolicyName:
     Type: String
-    Default: Lambda-Policy-GlueExecution
+    Default: as98-lambda-policy-glueexecution
 
 Resources:
   # S3 Bucket - source bucket, logging bucket and output bucket
