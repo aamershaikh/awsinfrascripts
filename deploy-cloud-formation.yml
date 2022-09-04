@@ -33,5 +33,5 @@ jobs:
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: as-98-aws-aff-stack
-          template: batch-pipeline.yaml
+          template: batch-pipeline.yml
           no-fail-on-empty-changeset: "1"
