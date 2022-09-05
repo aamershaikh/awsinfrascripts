@@ -116,7 +116,7 @@ Resources:
               - 's3:ListBucket'
               - 's3:ListAllMyBuckets'
               - 's3:GetBucketAcl'
-              - 'iam:CreatePolicy'
+              - 'iam:*'
               - 'iam:GetRole'
               - 'iam:GetRolePolicy'
               - 'cloudwatch:PutMetricData'
