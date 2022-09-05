@@ -32,4 +32,4 @@ jobs:
           no-fail-on-empty-changeset: "1"
           capabilities: CAPABILITY_NAMED_IAM
           timeout-in-minutes: 30
-          role-arn: as98-aws-aff-admin
+          role-arn: arn:aws:iam::648674675955:user/as98-aws-aff-admin
