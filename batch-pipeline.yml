@@ -123,6 +123,16 @@ Resources:
               - 'sqs:DeleteMessage'
               - 'sqs:GetQueueAttributes'
             Resource: !Join ['',['arn:', !Ref AWS::Partition, ':logs:', !Ref AWS::Region, ':', !Ref AWS::AccountId, ':log-group:/aws/lambda/', !Ref LambdaFunctionName, ':*']]
+      ManagedPolicyName: sqs
+      PolicyDocument: 
+        Version: '2012-10-17'
+        Statement: 
+          - Effect: Allow
+            Action: 
+              - 'sqs:ReceiveMessage'
+              - 'sqs:DeleteMessage'
+              - 'sqs:GetQueueAttributes'
+            Resource: !Sub ${FileQueue.Arn}
             
   LambdaFunction:
     Type: AWS::Lambda::Function
